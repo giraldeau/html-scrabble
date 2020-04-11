@@ -72,7 +72,7 @@ console.log('config', config);
 
 // //////////////////////////////////////////////////////////////////////
 
-var smtp = nodemailer.createTransport('SMTP', config.mailTransportConfig);
+var smtp = nodemailer.createTransport(config.mailTransportConfig);
 
 var app = express();
 var server = app.listen(config.port)
@@ -177,11 +177,12 @@ Game.prototype.sendInvitation = function(player, subject)
 {
     try {
         console.log('sendInvitation to', player.name, 'subject', subject);
+        link = this.makeLink(player)
         smtp.sendMail({ from: config.mailSender,
                         to: [ player.email ],
                         subject: subject,
-                        text: 'Make your move:\n\n' + this.makeLink(player),
-                        html: 'Click <a href="' + this.makeLink(player) + '">here</a> to make your move.' },
+                        text: 'Click this link to join the game :\n\n' + link + '\n\nHave fun!\n\n',
+                        html: '<p>Click this link to join the game :<a href="' + link + '">' + link + '</a></p><p>Have fun!</p>' },
                       function (err) {
                           if (err) {
                               console.log('sending mail failed', err);
